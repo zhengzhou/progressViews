@@ -17,6 +17,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     ProgressView progress1, progress2;
     SeekBar seekBar1, seekBar2;
+    PieChartView pieChart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         progress2 = (ProgressView) findViewById(R.id.progress2);
         seekBar1 = (SeekBar) findViewById(R.id.seekBar1);
         seekBar2 = (SeekBar) findViewById(R.id.seekBar2);
+        pieChart = (PieChartView) findViewById(R.id.pie_chart);
         button1.setOnClickListener(this);
     }
 
