@@ -1,10 +1,13 @@
-package com.example.progressdemo;
+package com.example.demo;
 
+import person.zhou.view.PieChartView;
+import person.zhou.view.ProgressView;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.SeekBar;
 
+import com.example.progressdemo.R;
 import com.yiutil.tools.Logger;
 
 /**

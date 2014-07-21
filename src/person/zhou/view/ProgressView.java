@@ -1,4 +1,8 @@
-package com.example.progressdemo;
+package person.zhou.view;
+
+import com.example.progressdemo.R;
+import com.example.progressdemo.R.dimen;
+import com.example.progressdemo.R.styleable;
 
 import android.content.Context;
 import android.content.res.TypedArray;

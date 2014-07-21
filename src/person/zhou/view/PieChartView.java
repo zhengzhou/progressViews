@@ -1,4 +1,4 @@
-package com.example.progressdemo;
+package person.zhou.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 
+import com.example.progressdemo.R;
+import com.example.progressdemo.R.color;
 import com.yiutil.tools.Logger;
 
 /**
