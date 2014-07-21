@@ -9,22 +9,24 @@ import android.util.AttributeSet;
 import android.util.SparseIntArray;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+import android.widget.RelativeLayout;
 
 import com.example.progressdemo.R;
-import com.yiutil.tools.Logger;
 
 /**
  * 大饼图．
  *
  * @author zhou
- *
  */
 public class PieChartView extends View {
 
-    /** 绘制区域 */
+    /**
+     * 绘制区域
+     */
     RectF oval = new RectF();
 
     RectF ovalPie = new RectF();
@@ -44,7 +46,9 @@ public class PieChartView extends View {
 
     boolean inProgress;
 
-    /** 动画 */
+    /**
+     * 动画
+     */
     Runnable invalidateCall = new Runnable() {
 
         @Override
@@ -81,6 +85,7 @@ public class PieChartView extends View {
         progressPaint.setAntiAlias(true);
         progressPaint.setStyle(Paint.Style.STROKE);
         progressPaint.setStrokeWidth(strokeWidth);
+        progressPaint.setStrokeCap(Paint.Cap.ROUND);
 
         if (isInEditMode()) {
             forPreview();
@@ -103,7 +108,15 @@ public class PieChartView extends View {
         this.startAnimation(animation);
     }
 
-    /***
+    public void init(int[] color) {
+        mPipAndColor = new SparseIntArray(4);
+        mPipAndColor.put(color[0], 0);
+        mPipAndColor.put(color[1], 0);
+        mPipAndColor.put(color[2], 0);
+        mPipAndColor.put(color[3], 0);
+    }
+
+    /**
      * 显示加载进度
      */
     public void beginLoad() {
@@ -151,18 +164,24 @@ public class PieChartView extends View {
     private int mProgressStartAngle = 0;
     private int mProgressSweepAngle = 0;
 
+    /**
+     * 旋转的进度圈
+     *
+     * @param canvas
+     */
     private void drawProgressPie(Canvas canvas) {
-        if (mProgressSweepAngle < 360 / mPipAndColor.size()) {
+        int padding = 40 / mPipAndColor.size();
+        if (mProgressStartAngle < 360) {
             mProgressSweepAngle = (1 + mProgressStartAngle) / mPipAndColor.size();
         } else {
-            mProgressSweepAngle = 360 / mPipAndColor.size();
+            mProgressSweepAngle = (360) / mPipAndColor.size() - padding;
         }
+        int startAngle = mProgressStartAngle;
         for (int i = 0; i < mPipAndColor.size(); i++) {
             int color = mPipAndColor.keyAt(i);
-            int percent = (int) (mPipAndColor.valueAt(i) * 3.6 + 0.5);
-            piePaint.setColor(color);
-            canvas.drawArc(oval, mProgressStartAngle, percent, false, piePaint);
-            mProgressStartAngle += percent;
+            progressPaint.setColor(color);
+            canvas.drawArc(ovalPie, startAngle, mProgressSweepAngle, false, progressPaint);
+            startAngle += mProgressSweepAngle + padding;
         }
         postDelayed(invalidateCall, 50);
     }
@@ -198,8 +217,8 @@ public class PieChartView extends View {
             top = getPaddingTop() + strokeWidth;
             bottom = getPaddingBottom() + strokeWidth;
             oval.set(left, top, w - right, w - bottom);
-
-            Logger.dd("w:%d,h:%d", w, h);
+            ovalPie.set(left + strokeWidth, top + strokeWidth, w - right - strokeWidth, w - bottom - strokeWidth);
+//            Logger.dd("w:%d,h:%d", w, h); strokeWidth
         }
     }
 

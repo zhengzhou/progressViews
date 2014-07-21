@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.SeekBar;
 
 import com.example.progressdemo.R;
-import com.yiutil.tools.Logger;
 
 /**
  * 主页面
@@ -31,7 +30,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Logger.Debug(true);
         setContentView(R.layout.main_layout);
         View button1 = findViewById(R.id.button1);
         progress1 = (ProgressView) findViewById(R.id.progress1);
@@ -57,18 +55,20 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     Runnable action;
     private void setSizeData() {
+        final SparseIntArray pipAndColor = new SparseIntArray(5);
+        // 颜色值 百分比
+        pieChart.init(Colors);
         pieChart.beginLoad();
         action = new Runnable() {
 
             @Override
             public void run() {
-                SparseIntArray pipAndColor = new SparseIntArray(5);
                 int[] sizePercents = { 7, 15, 33, 55, 40 };
-                // 颜色值 百分比
                 pipAndColor.put(Colors[0], sizePercents[0]);
                 pipAndColor.put(Colors[1], sizePercents[1]);
                 pipAndColor.put(Colors[2], sizePercents[2]);
                 pipAndColor.put(Colors[3], sizePercents[3]);
+
                 pieChart.setData(pipAndColor, true);
             }
         };
