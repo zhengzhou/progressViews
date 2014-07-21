@@ -9,11 +9,11 @@ import android.util.AttributeSet;
 import android.util.SparseIntArray;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 
 import com.example.progressdemo.R;
-import com.example.progressdemo.R.color;
 import com.yiutil.tools.Logger;
 
 /**
@@ -31,7 +31,7 @@ public class PieChartView extends View {
 
     private Paint bgPaint;
 
-    private int strokeWidth = 5;
+    private int strokeWidth = 7;
 
     /**
      * 颜色是key,百分比是value　考虑到百分比可能相同,而相同颜色没有太大意义
@@ -44,6 +44,16 @@ public class PieChartView extends View {
 
     boolean inProgress;
 
+    /** 动画 */
+    Runnable invalidateCall = new Runnable() {
+
+        @Override
+        public void run() {
+            mProgressStartAngle += 15;
+            invalidate();
+        }
+    };
+
     public PieChartView(Context context) {
         this(context, null);
     }
@@ -55,7 +65,7 @@ public class PieChartView extends View {
     public PieChartView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        strokeWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources()
+        strokeWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, strokeWidth, getResources()
                 .getDisplayMetrics());
         // complexToDimensionPixelOffset(10, getResources().getDisplayMetrics());
         bgPaint = new Paint();
@@ -88,11 +98,23 @@ public class PieChartView extends View {
 
     private void startAnimation() {
         PieAnimation animation = new PieAnimation(this);
-        animation.setDuration(2000);
+        animation.setDuration(1000);
+        animation.setInterpolator(new AccelerateDecelerateInterpolator());
         this.startAnimation(animation);
     }
 
+    /***
+     * 显示加载进度
+     */
+    public void beginLoad() {
+        mProgressStartAngle = 0;
+        inProgress = true;
+        invalidate();
+    }
+
     public void setData(SparseIntArray pipAndColor, boolean anim) {
+        inProgress = false;
+        removeCallbacks(invalidateCall);
         setData(pipAndColor);
         if (anim) {
             startAnimation();
@@ -126,16 +148,23 @@ public class PieChartView extends View {
         canvas.drawCircle(oval.centerX(), oval.centerY(), (oval.width() + strokeWidth) / 2, bgPaint);
     }
 
-    private int progressStartAngle = 0;
+    private int mProgressStartAngle = 0;
+    private int mProgressSweepAngle = 0;
 
     private void drawProgressPie(Canvas canvas) {
+        if (mProgressSweepAngle < 360 / mPipAndColor.size()) {
+            mProgressSweepAngle = (1 + mProgressStartAngle) / mPipAndColor.size();
+        } else {
+            mProgressSweepAngle = 360 / mPipAndColor.size();
+        }
         for (int i = 0; i < mPipAndColor.size(); i++) {
             int color = mPipAndColor.keyAt(i);
             int percent = (int) (mPipAndColor.valueAt(i) * 3.6 + 0.5);
             piePaint.setColor(color);
-            canvas.drawArc(oval, progressStartAngle, percent, false, piePaint);
-            progressStartAngle += percent;
+            canvas.drawArc(oval, mProgressStartAngle, percent, false, piePaint);
+            mProgressStartAngle += percent;
         }
+        postDelayed(invalidateCall, 50);
     }
 
     private void drawPie(Canvas canvas) {

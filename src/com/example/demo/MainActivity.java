@@ -4,6 +4,7 @@ import person.zhou.view.PieChartView;
 import person.zhou.view.ProgressView;
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.SparseIntArray;
 import android.view.View;
 import android.widget.SeekBar;
 
@@ -22,6 +23,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
     SeekBar seekBar1, seekBar2;
     PieChartView pieChart;
 
+    /**
+     * UI Color Palette<br>
+     */
+    final int[] Colors = { 0xff03a9f4, 0xffcddc39, 0xffe91e63, 0xff00bcd4, 0xfff5722, };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +40,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
         seekBar2 = (SeekBar) findViewById(R.id.seekBar2);
         pieChart = (PieChartView) findViewById(R.id.pie_chart);
         button1.setOnClickListener(this);
+
+        setSizeData();
     }
 
 
@@ -42,6 +50,29 @@ public class MainActivity extends Activity implements View.OnClickListener {
         if (v.getId() == R.id.button1) {
             progress1.setProgress(seekBar1.getProgress());
             progress2.setProgress(seekBar2.getProgress());
+            pieChart.removeCallbacks(action);
+            setSizeData();
         }
+    }
+
+    Runnable action;
+    private void setSizeData() {
+        pieChart.beginLoad();
+        action = new Runnable() {
+
+            @Override
+            public void run() {
+                SparseIntArray pipAndColor = new SparseIntArray(5);
+                int[] sizePercents = { 7, 15, 33, 55, 40 };
+                // 颜色值 百分比
+                pipAndColor.put(Colors[0], sizePercents[0]);
+                pipAndColor.put(Colors[1], sizePercents[1]);
+                pipAndColor.put(Colors[2], sizePercents[2]);
+                pipAndColor.put(Colors[3], sizePercents[3]);
+                pieChart.setData(pipAndColor, true);
+            }
+        };
+        pieChart.postDelayed(action, 5000);
+
     }
 }
