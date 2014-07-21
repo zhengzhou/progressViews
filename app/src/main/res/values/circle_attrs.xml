@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+     <declare-styleable name="CircleProgress">
+        <attr name="forColor" format="color|reference" />
+        <attr name="bacColor" format="color|reference" />        
+        <attr name="startAngle" format="float" >
+            <enum name="normal" value="160" />
+        </attr>
+        <attr name="sweepAngle" format="float" />
+        <attr name="progress" format="integer" />
+     </declare-styleable>
+     
+     <color name="forColor">#00af64</color>
+     <color name="bacColor">#aaaa</color>
+     <dimen name="strokeWidth">10dp</dimen>
+     <dimen name="fontSize">25dp</dimen>
+</resources>
