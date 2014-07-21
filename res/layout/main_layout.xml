@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/seekBar2"
         android:layout_alignParentLeft="true"
-        android:text="left: "
+        android:text="right: "
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/seekBar2"
         android:layout_alignParentLeft="true"
-        android:text="right: "
+        android:text="left: "
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <SeekBar
@@ -69,49 +69,16 @@
         android:id="@+id/button1"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/seekBar2"
-        android:layout_toRightOf="@+id/textView1"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:text="刷新" />
 
-        <com.example.progressdemo.ProgressView
-            android:id="@+id/progress3"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignLeft="@+id/textView2"
-            android:layout_alignTop="@+id/progress4"
-            android:padding="10dp"
-            progress:bacColor="@color/forColor"
-            progress:forColor="@color/bacColor"
-            progress:progress="33"
-            progress:startAngle="0"
-            progress:sweepAngle="180" />
-
-  
-
-        <com.example.progressdemo.ProgressView
-            android:id="@+id/progress4"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_below="@+id/button1"
-            android:layout_centerHorizontal="true"
-            android:padding="10dp"
-            progress:bacColor="@color/bacColor"
-            progress:forColor="#0064af"
-            progress:progress="63"
-            progress:startAngle="90"
-            progress:sweepAngle="240" />
+    <com.example.progressdemo.PieChartView
+        android:id="@+id/pie_chart"
+        android:layout_below="@id/button1"
+        android:layout_centerHorizontal="true"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        />
         
-              <com.example.progressdemo.ProgressView
-            android:id="@+id/progress5"
-            android:layout_width="140dp"
-            android:layout_height="140dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/progress4"
-            android:padding="10dp"
-            progress:bacColor="@color/bacColor"
-            progress:forColor="#af0064"
-            progress:progress="43"
-            progress:startAngle="180"
-            progress:sweepAngle="180" />
-
 </RelativeLayout>
