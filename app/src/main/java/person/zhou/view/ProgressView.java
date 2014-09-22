@@ -1,8 +1,5 @@
 package person.zhou.view;
 
-import com.example.progressdemo.R;
-import com.example.progressdemo.R.dimen;
-import com.example.progressdemo.R.styleable;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -12,11 +9,12 @@ import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.RectF;
 import android.graphics.Typeface;
-import android.os.Handler;
-import android.os.Handler.Callback;
-import android.os.Message;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
+
+import com.mgyun.shua.R;
 
 /**
  * 弧形的进度条．
@@ -50,20 +48,7 @@ public class ProgressView extends View {
     /** 文字的宽度 */
     float textWidth;
 
-    /** 动画 */
-    Callback invalidateCall = new Callback() {
-
-        @Override
-        public boolean handleMessage(Message msg) {
-            if (mAnimaProgress < mProgress) {
-                mAnimaProgress += 3;
-                invalidate();
-            }
-            return true;
-        }
-    };
-
-    Handler animaHandle = new Handler(invalidateCall);
+    private boolean withText = false;
 
     public ProgressView(Context context) {
         this(context, null);
@@ -86,7 +71,7 @@ public class ProgressView extends View {
         mBacColor = a.getColor(R.styleable.CircleProgress_bacColor, Color.rgb(200, 200, 200));
         mStartAngle = a.getFloat(R.styleable.CircleProgress_startAngle, 160);
         mSweepAngle = a.getFloat(R.styleable.CircleProgress_sweepAngle, 540 - 2 * mStartAngle);
-        mProgress = a.getInt(R.styleable.CircleProgress_progress, 20);
+        mProgress = a.getInt(R.styleable.CircleProgress_progress, 0);
         a.recycle();
     }
 
@@ -109,11 +94,11 @@ public class ProgressView extends View {
         mBacPain.setStrokeCap(Cap.ROUND);
         mBacPain.setStrokeWidth(strokeWidth);
         // mBacPain.setMaskFilter(filter);
-        mBacPain.setShadowLayer(5, 2, 2, Color.GRAY);
+        //mBacPain.setShadowLayer(5, 2, 2, Color.GRAY);
 
         mTextPain.setAntiAlias(true);
         mTextPain.setColor(Color.BLACK);
-        mTextPain.setShadowLayer(5, 2, 2, Color.GRAY);
+        //mTextPain.setShadowLayer(5, 2, 2, Color.GRAY);
         mTextPain.setStrokeCap(Cap.ROUND);
         mTextPain.setTextSize(getResources().getDimension(R.dimen.fontSize));
         mTextPain.setTypeface(Typeface.DEFAULT_BOLD);
@@ -125,22 +110,48 @@ public class ProgressView extends View {
     }
 
     public void setProgress(int mProgress) {
-        this.mProgress = mProgress;
-        mAnimaProgress = -1;
-        animaHandle.sendEmptyMessage(0);
+        setProgress(mProgress,false);
+    }
+
+    public void setProgress(int progress,boolean withAnim){
+        if(withAnim){
+            ProgressAnimation animation = new ProgressAnimation(progress);
+            this.startAnimation(animation);
+        }else if (progress >= 0) {
+            this.mProgress = progress;
+            invalidate();
+        }
+    }
+
+    /**
+     * 是否显示中间文字
+     *
+     * @param withText
+     */
+    public void setWithText(boolean withText){
+        this.withText = withText;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawArc(oval, mStartAngle, mSweepAngle, false, mBacPain);
-        canvas.drawArc(oval, mStartAngle, mSweepAngle * mAnimaProgress / 100, false, mForPain);
-        canvas.drawText(mProgress + "%", (getPaddingLeft() + getWidth() - textWidth) / 2, getPaddingTop() + getWidth() / 2, mTextPain);
-        if (mAnimaProgress < mProgress) {
-            animaHandle.sendEmptyMessageDelayed(0, 500 / mProgress);
-        }
+        canvas.drawArc(oval, mStartAngle, mSweepAngle * mProgress / 100, false, mForPain);
+        if(withText)
+            canvas.drawText(mProgress + "%", (getPaddingLeft() + getWidth() - textWidth) / 2, getPaddingTop() + getWidth() / 2, mTextPain);
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        final int mode = MeasureSpec.getMode(heightMeasureSpec);
+        final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        if(mode == MeasureSpec.AT_MOST){
+            int width = getMeasuredWidth();
+            final int measureSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
+            super.onMeasure(widthMeasureSpec, measureSpec);
+        }
+    }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -151,8 +162,28 @@ public class ProgressView extends View {
             top = getPaddingTop();
             bottom = getPaddingBottom();
             oval.set(left, top, w - right, w - bottom);
-            // Logger.dd("w:%d,h:%d", w, h);
         }
     }
 
+    public class ProgressAnimation extends Animation {
+
+        int start,end;
+
+        public ProgressAnimation(int end) {
+            start = getProgress();
+            this.end = end;
+            setDuration(2000 * (end - start) / 100);
+        }
+
+        @Override
+        protected void applyTransformation(float interpolatedTime, Transformation t) {
+            super.applyTransformation(interpolatedTime, t);
+            setProgress((int) (start + (end - start) * interpolatedTime));
+        }
+
+        @Override
+        public boolean willChangeBounds() {
+            return false;
+        }
+    }
 }
