@@ -1,6 +1,5 @@
 package person.zhou.view;
 
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -42,6 +41,8 @@ public class ProgressView extends View {
     private float mStartAngle;
     /** 圆弧扫过的角度 */
     private float mSweepAngle;
+    /**中间字体大小*/
+    private float mFontSize;
 
     /** 绘制区域 */
     RectF oval = new RectF();
@@ -49,6 +50,7 @@ public class ProgressView extends View {
     float textWidth;
 
     private boolean withText = false;
+    private boolean inAnimation  = false;
 
     public ProgressView(Context context) {
         this(context, null);
@@ -71,7 +73,9 @@ public class ProgressView extends View {
         mBacColor = a.getColor(R.styleable.CircleProgress_bacColor, Color.rgb(200, 200, 200));
         mStartAngle = a.getFloat(R.styleable.CircleProgress_startAngle, 160);
         mSweepAngle = a.getFloat(R.styleable.CircleProgress_sweepAngle, 540 - 2 * mStartAngle);
+        mFontSize = a.getDimension(R.styleable.CircleProgress_fontSize,0);
         mProgress = a.getInt(R.styleable.CircleProgress_progress, 0);
+        setWithText(mFontSize != 0);
         a.recycle();
     }
 
@@ -100,7 +104,7 @@ public class ProgressView extends View {
         mTextPain.setColor(Color.BLACK);
         //mTextPain.setShadowLayer(5, 2, 2, Color.GRAY);
         mTextPain.setStrokeCap(Cap.ROUND);
-        mTextPain.setTextSize(getResources().getDimension(R.dimen.fontSize));
+        mTextPain.setTextSize(mFontSize);
         mTextPain.setTypeface(Typeface.DEFAULT_BOLD);
         textWidth = mTextPain.measureText("00%");
     }
@@ -115,8 +119,12 @@ public class ProgressView extends View {
 
     public void setProgress(int progress,boolean withAnim){
         if(withAnim){
+            if(inAnimation){
+                clearAnimation();
+            }
             ProgressAnimation animation = new ProgressAnimation(progress);
             this.startAnimation(animation);
+            inAnimation = true;
         }else if (progress >= 0) {
             this.mProgress = progress;
             invalidate();
@@ -172,13 +180,31 @@ public class ProgressView extends View {
         public ProgressAnimation(int end) {
             start = getProgress();
             this.end = end;
-            setDuration(2000 * (end - start) / 100);
+            //时间间隔有点距离才能跑动画．
+            //这样可以保证多次动画是匀速的
+            if(end - start > 2)
+                setDuration(2000 * (end - start) / 100);
         }
 
         @Override
         protected void applyTransformation(float interpolatedTime, Transformation t) {
             super.applyTransformation(interpolatedTime, t);
             setProgress((int) (start + (end - start) * interpolatedTime));
+            if(interpolatedTime==1){
+                inAnimation = false;
+            }
+        }
+
+        @Override
+        public void start() {
+            super.start();
+            inAnimation = true;
+        }
+
+        @Override
+        public void cancel() {
+            super.cancel();
+            inAnimation = false;
         }
 
         @Override
