@@ -1,20 +1,5 @@
 package person.zhou.view;
 
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Paint.Cap;
-import android.graphics.RectF;
-import android.graphics.Typeface;
-import android.util.AttributeSet;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.Transformation;
-
-import com.mgyun.shua.R;
-
 /**
  * 弧形的进度条．
  *
@@ -23,8 +8,8 @@ import com.mgyun.shua.R;
  */
 public class ProgressView extends View {
 
-    /** 所代表的进度 */
-    private int mProgress;
+    /** 所代表的进度 0-100 */
+    private float mProgress;
     private int mAnimaProgress = -1;
 
     /** 前景画笔 */
@@ -105,19 +90,30 @@ public class ProgressView extends View {
         //mTextPain.setShadowLayer(5, 2, 2, Color.GRAY);
         mTextPain.setStrokeCap(Cap.ROUND);
         mTextPain.setTextSize(mFontSize);
-        mTextPain.setTypeface(Typeface.DEFAULT_BOLD);
-        textWidth = mTextPain.measureText("00%");
+        //mTextPain.setTypeface(Typeface.DEFAULT_BOLD);
+        textWidth = mTextPain.measureText(mProgress + "%");
+
+        Paint.FontMetrics fontMetrics = mTextPain.getFontMetrics();
+        fontTotalHeight = fontMetrics.bottom + fontMetrics.top;
     }
 
+    float fontTotalHeight;
+
     public int getProgress() {
-        return mProgress;
+        return (int) (mProgress + 0.5f);
     }
 
     public void setProgress(int mProgress) {
         setProgress(mProgress,false);
     }
 
-    public void setProgress(int progress,boolean withAnim){
+    private void setProgress(float mProgress) {
+        this.mProgress = mProgress;
+        textWidth = mTextPain.measureText((int)mProgress + "%");
+        invalidate();
+    }
+
+    public void setProgress(float progress,boolean withAnim){
         if(withAnim){
             if(inAnimation){
                 clearAnimation();
@@ -127,13 +123,14 @@ public class ProgressView extends View {
             inAnimation = true;
         }else if (progress >= 0) {
             this.mProgress = progress;
+            textWidth = mTextPain.measureText(mProgress + "%");
             invalidate();
         }
     }
 
     /**
      * 是否显示中间文字
-     *
+     *  在布局中为设置字体大小的属性(CircleProgress_fontSize)时候默认不显示(false).
      * @param withText
      */
     public void setWithText(boolean withText){
@@ -146,7 +143,7 @@ public class ProgressView extends View {
         canvas.drawArc(oval, mStartAngle, mSweepAngle, false, mBacPain);
         canvas.drawArc(oval, mStartAngle, mSweepAngle * mProgress / 100, false, mForPain);
         if(withText)
-            canvas.drawText(mProgress + "%", (getPaddingLeft() + getWidth() - textWidth) / 2, getPaddingTop() + getWidth() / 2, mTextPain);
+            canvas.drawText((int) mProgress + "%", ( getWidth() - textWidth) / 2, (getWidth() - fontTotalHeight) / 2, mTextPain);
     }
 
     @Override
@@ -175,21 +172,23 @@ public class ProgressView extends View {
 
     public class ProgressAnimation extends Animation {
 
-        int start,end;
+        float start,end;
 
-        public ProgressAnimation(int end) {
+        public ProgressAnimation(float end) {
             start = getProgress();
             this.end = end;
             //时间间隔有点距离才能跑动画．
-            //这样可以保证多次动画是匀速的
-            if(end - start > 2)
-                setDuration(2000 * (end - start) / 100);
+            //这样可以保证多次动画是匀速的.
+            // 动画时间是个二次函数,这样效果比较均匀.
+            final float interval = Math.abs(end - start);
+            if(interval >= 1)
+                setDuration((long) (200*Math.sqrt(interval)));
         }
 
         @Override
         protected void applyTransformation(float interpolatedTime, Transformation t) {
             super.applyTransformation(interpolatedTime, t);
-            setProgress((int) (start + (end - start) * interpolatedTime));
+            setProgress((start + (end - start) * interpolatedTime));
             if(interpolatedTime==1){
                 inAnimation = false;
             }

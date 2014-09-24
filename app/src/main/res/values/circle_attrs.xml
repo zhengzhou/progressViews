@@ -8,6 +8,7 @@
         </attr>
         <attr name="sweepAngle" format="float" />
         <attr name="progress" format="integer" />
+        <attr name="fontSize" format="dimension|reference" />
      </declare-styleable>
      
      <color name="forColor">#00af64</color>
