@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="刷新" />
+        android:text="@string/refresh" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -81,7 +81,7 @@
 
         <person.zhou.views.ProgressView
             android:id="@+id/progress3"
-            android:layout_width="160dp"
+            android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:padding="10dp"
             progress:bacColor="@color/bacColor"
