@@ -10,18 +10,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.example.progressdemo.R;
 
 import person.zhou.views.PieChartView;
 import person.zhou.views.ProgressView;
 
-public class ProgressViewFragment extends Fragment  implements View.OnClickListener {
+public class ProgressViewFragment extends Fragment  implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
     ProgressView progress1, progress2,progress3;
     SeekBar seekBar1, seekBar2;
     PieChartView pieChart;
-
+    TextView txtCmd;
 
     public ProgressViewFragment() {
         // Required empty public constructor
@@ -42,7 +43,12 @@ public class ProgressViewFragment extends Fragment  implements View.OnClickListe
         seekBar1 = (SeekBar) findViewById(R.id.seekBar1);
         seekBar2 = (SeekBar) findViewById(R.id.seekBar2);
         pieChart = (PieChartView) findViewById(R.id.pie_chart);
+        txtCmd = (TextView) findViewById(R.id.txt_cmd);
         button1.setOnClickListener(this);
+        seekBar1.setOnSeekBarChangeListener(this);
+        seekBar1.setTag(progress1);
+        seekBar2.setOnSeekBarChangeListener(this);
+        seekBar2.setTag(progress2);
     }
 
     private View findViewById(int viewId) {
@@ -66,6 +72,7 @@ public class ProgressViewFragment extends Fragment  implements View.OnClickListe
         public boolean handleMessage(Message message) {
             switch (message.what){
                 case 0:
+                    txtCmd.setText("");
                 case 1:
                 case 2:
                 case 3:
@@ -75,10 +82,27 @@ public class ProgressViewFragment extends Fragment  implements View.OnClickListe
                     break;
             }
             progress3.setProgress(progress[message.what], true);
+            String text = txtCmd.getText()+"\np.setProgress("+progress[message.what]+", true);";
+            txtCmd.setText(text);
             return false;
         }
     };
 
     public Handler handler = new Handler(callback);
 
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        ProgressView pView= (ProgressView) seekBar.getTag();
+        pView.setProgress(seekBar.getProgress(),true);
+    }
 }

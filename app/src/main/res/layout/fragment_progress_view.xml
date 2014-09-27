@@ -65,32 +65,42 @@
         android:progress="85"
         android:layout_toRightOf="@+id/textView2" />
 
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/refresh" />
-
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/button1">
+        android:layout_below="@id/seekBar2">
+
+        <TextView
+            android:id="@+id/txt_cmd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:textSize="16sp"
+            android:textColor="#9666"
+            />
 
         <person.zhou.views.ProgressView
             android:id="@+id/progress3"
             android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            progress:bacColor="@color/bacColor"
-            progress:forColor="#E40045"
+            android:layout_alignParentRight="true"
+            progress:bacColor="#3300bcd4"
+            progress:forColor="#00bcd4"
             progress:progress="85"
             progress:startAngle="90"
             progress:sweepAngle="360"
             progress:fontSize="35dp"/>
 
     </RelativeLayout>
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/refresh" />
 
 </RelativeLayout>
