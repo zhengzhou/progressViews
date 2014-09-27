@@ -102,7 +102,7 @@ public class ProgressView extends View {
         mTextPain.setStrokeCap(Paint.Cap.ROUND);
         mTextPain.setTextSize(mFontSize);
         //mTextPain.setTypeface(Typeface.DEFAULT_BOLD);
-        textWidth = mTextPain.measureText(mProgress + "%");
+        textWidth = mTextPain.measureText((int)mProgress + "%");
 
         Paint.FontMetrics fontMetrics = mTextPain.getFontMetrics();
         fontTotalHeight = fontMetrics.bottom + fontMetrics.top;

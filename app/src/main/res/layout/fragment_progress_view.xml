@@ -1,0 +1,96 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:progress="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="15dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <person.zhou.views.ProgressView
+        android:id="@+id/progress1"
+        android:layout_width="200dp"
+        android:layout_height="150dp"
+        android:layout_alignParentLeft="true"
+        android:padding="10dp"
+        progress:bacColor="@color/bacColor"
+        progress:forColor="@color/forColor"
+        progress:progress="43"
+        progress:startAngle="160"
+        progress:fontSize="30dp"/>
+
+    <person.zhou.views.ProgressView
+        android:id="@+id/progress2"
+        android:layout_width="160dp"
+        android:layout_height="130dp"
+        android:layout_marginLeft="-20dp"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@id/progress1"
+        android:padding="10dp"
+        progress:bacColor="@color/bacColor"
+        progress:forColor="#E40045"
+        progress:progress="85"
+        progress:startAngle="220"
+        progress:sweepAngle="160" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/seekBar2"
+        android:layout_alignParentLeft="true"
+        android:text="right: "
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/seekBar2"
+        android:layout_alignParentLeft="true"
+        android:text="left: "
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <SeekBar
+        android:id="@+id/seekBar1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:progress="43"
+        android:layout_alignLeft="@+id/seekBar2"
+        android:layout_below="@+id/progress1" />
+
+    <SeekBar
+        android:id="@+id/seekBar2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/seekBar1"
+        android:progress="85"
+        android:layout_toRightOf="@+id/textView2" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="刷新" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/button1">
+
+        <person.zhou.views.ProgressView
+            android:id="@+id/progress3"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            progress:bacColor="@color/bacColor"
+            progress:forColor="#E40045"
+            progress:progress="85"
+            progress:startAngle="90"
+            progress:sweepAngle="360"
+            progress:fontSize="35dp"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>
