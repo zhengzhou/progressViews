@@ -1,4 +1,15 @@
-package person.zhou.view;
+package person.zhou.views;
+
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.util.AttributeSet;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 
 /**
  * 弧形的进度条．
@@ -74,13 +85,13 @@ public class ProgressView extends View {
         mForPain.setAntiAlias(true);
         mForPain.setStyle(Paint.Style.STROKE);
         mForPain.setColor(mForColor);
-        mForPain.setStrokeCap(Cap.ROUND);
+        mForPain.setStrokeCap(Paint.Cap.ROUND);
         mForPain.setStrokeWidth(strokeWidth);
 
         mBacPain.setAntiAlias(true);
         mBacPain.setStyle(Paint.Style.STROKE);
         mBacPain.setColor(mBacColor);
-        mBacPain.setStrokeCap(Cap.ROUND);
+        mBacPain.setStrokeCap(Paint.Cap.ROUND);
         mBacPain.setStrokeWidth(strokeWidth);
         // mBacPain.setMaskFilter(filter);
         //mBacPain.setShadowLayer(5, 2, 2, Color.GRAY);
@@ -88,7 +99,7 @@ public class ProgressView extends View {
         mTextPain.setAntiAlias(true);
         mTextPain.setColor(Color.BLACK);
         //mTextPain.setShadowLayer(5, 2, 2, Color.GRAY);
-        mTextPain.setStrokeCap(Cap.ROUND);
+        mTextPain.setStrokeCap(Paint.Cap.ROUND);
         mTextPain.setTextSize(mFontSize);
         //mTextPain.setTypeface(Typeface.DEFAULT_BOLD);
         textWidth = mTextPain.measureText(mProgress + "%");

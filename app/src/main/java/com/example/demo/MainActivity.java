@@ -1,7 +1,9 @@
 package com.example.demo;
 
-import person.zhou.view.PieChartView;
-import person.zhou.view.ProgressView;
+import person.zhou.views.PieChartView;
+import person.zhou.views.ProgressView;
+import person.zhou.views.ProgressView;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.SparseIntArray;

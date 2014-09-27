@@ -2,11 +2,11 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.1.0"
+    buildToolsVersion '20.0.0'
 
     defaultConfig {
         applicationId "com.example.progressdemo"
-        minSdkVersion 11
+        minSdkVersion 14
         targetSdkVersion 19
     }
 
@@ -19,5 +19,6 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:+'
+    compile 'com.android.support:support-v4:20.0.0'
+    compile project(':library')
 }
